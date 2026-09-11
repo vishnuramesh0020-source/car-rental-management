@@ -171,72 +171,229 @@ export const INITIAL_CARS = [
 export const INITIAL_BOOKINGS = [
   {
     id: "BKG-901",
+    customerId: "cust-1",
     customerName: "Alexander Wright",
     customerEmail: "a.wright@enterprise.com",
+    customerPhone: "+91 98765 43210",
+    drivingLicense: "KA-012022004521",
     carId: "car-3",
-    carName: "Mercedes-Benz C300 AMG",
+    carName: "Mercedes-Benz C300 AMG Line",
     startDate: "2026-09-08",
     endDate: "2026-09-14",
     totalDays: 6,
     totalAmount: 870,
-    status: "Active"
+    status: "Active",
+    createdAt: "2026-09-08T09:30:00.000Z"
   },
   {
     id: "BKG-902",
+    customerId: "cust-2",
     customerName: "Sophia Martinez",
     customerEmail: "sophia.m@gmail.com",
+    customerPhone: "+91 98765 43211",
+    drivingLicense: "MH-122020003190",
     carId: "car-5",
     carName: "Audi RS6 Avant Performance",
     startDate: "2026-09-09",
     endDate: "2026-09-13",
     totalDays: 4,
     totalAmount: 1040,
-    status: "Active"
+    status: "Active",
+    createdAt: "2026-09-09T11:15:00.000Z"
   },
   {
     id: "BKG-903",
+    customerId: "cust-3",
     customerName: "Liam Johnson",
     customerEmail: "liam.j@outlook.com",
+    customerPhone: "+91 98765 43212",
+    drivingLicense: "DL-042021008742",
     carId: "car-1",
     carName: "Tesla Model 3 Performance",
     startDate: "2026-09-02",
     endDate: "2026-09-06",
     totalDays: 4,
     totalAmount: 480,
-    status: "Completed"
+    status: "Completed",
+    createdAt: "2026-09-02T08:00:00.000Z"
   },
   {
     id: "BKG-904",
+    customerId: "cust-4",
     customerName: "Emma Watson",
     customerEmail: "emma.w@travelco.org",
+    customerPhone: "+91 98765 43213",
+    drivingLicense: "TN-022023006412",
     carId: "car-4",
     carName: "Porsche 911 Carrera S",
     startDate: "2026-09-12",
     endDate: "2026-09-16",
     totalDays: 4,
     totalAmount: 1280,
-    status: "Confirmed"
+    status: "Confirmed",
+    createdAt: "2026-09-10T14:20:00.000Z"
   },
   {
     id: "BKG-905",
+    customerId: "cust-5",
     customerName: "David Chen",
     customerEmail: "david.c@techventure.io",
+    customerPhone: "+91 98765 43214",
+    drivingLicense: "KA-032021009182",
     carId: "car-7",
     carName: "Toyota Camry XSE Hybrid",
     startDate: "2026-09-15",
     endDate: "2026-09-20",
     totalDays: 5,
     totalAmount: 325,
-    status: "Confirmed"
+    status: "Confirmed",
+    createdAt: "2026-09-10T16:45:00.000Z"
+  },
+  {
+    id: "BKG-906",
+    customerId: "cust-6",
+    customerName: "Priya Sharma",
+    customerEmail: "priya.sharma@innovate.in",
+    customerPhone: "+91 98765 43215",
+    drivingLicense: "MH-012019001243",
+    carId: "car-6",
+    carName: "Ford Mustang GT 5.0",
+    startDate: "2026-08-25",
+    endDate: "2026-08-28",
+    totalDays: 3,
+    totalAmount: 330,
+    status: "Completed",
+    createdAt: "2026-08-24T10:00:00.000Z"
+  },
+  {
+    id: "BKG-907",
+    customerId: "cust-7",
+    customerName: "Rohan Varma",
+    customerEmail: "rohan.v@fintech.co",
+    customerPhone: "+91 98765 43216",
+    drivingLicense: "DL-012022007834",
+    carId: "car-2",
+    carName: "BMW M4 Competition Coupe",
+    startDate: "2026-08-18",
+    endDate: "2026-08-20",
+    totalDays: 2,
+    totalAmount: 390,
+    status: "Cancelled",
+    createdAt: "2026-08-17T12:30:00.000Z"
   }
 ];
 
 export const INITIAL_CUSTOMERS = [
-  { id: "cust-1", name: "Alexander Wright", email: "a.wright@enterprise.com", phone: "+91 98765 43210", totalRentals: 4, spent: 3450 },
-  { id: "cust-2", name: "Sophia Martinez", email: "sophia.m@gmail.com", phone: "+91 98765 43211", totalRentals: 3, spent: 2980 },
-  { id: "cust-3", name: "Liam Johnson", email: "liam.j@outlook.com", phone: "+91 98765 43212", totalRentals: 6, spent: 4120 },
-  { id: "cust-4", name: "Emma Watson", email: "emma.w@travelco.org", phone: "+91 98765 43213", totalRentals: 2, spent: 2100 },
-  { id: "cust-5", name: "David Chen", email: "david.c@techventure.io", phone: "+91 98765 43214", totalRentals: 5, spent: 3890 }
+  {
+    id: "cust-1",
+    name: "Alexander Wright",
+    email: "a.wright@enterprise.com",
+    phone: "+91 98765 43210",
+    address: "Plot 42, Cyber City, Sector 29, Gurgaon, HR 122002",
+    drivingLicense: "KA-012022004521",
+    totalRentals: 4,
+    spent: 3450,
+    createdAt: "2025-11-12T10:00:00.000Z"
+  },
+  {
+    id: "cust-2",
+    name: "Sophia Martinez",
+    email: "sophia.m@gmail.com",
+    phone: "+91 98765 43211",
+    address: "Flat 302, Sea Green Apts, Bandra West, Mumbai, MH 400050",
+    drivingLicense: "MH-122020003190",
+    totalRentals: 3,
+    spent: 2980,
+    createdAt: "2025-12-04T14:30:00.000Z"
+  },
+  {
+    id: "cust-3",
+    name: "Liam Johnson",
+    email: "liam.j@outlook.com",
+    phone: "+91 98765 43212",
+    address: "18, Defense Colony, Ring Road, New Delhi, DL 110024",
+    drivingLicense: "DL-042021008742",
+    totalRentals: 6,
+    spent: 4120,
+    createdAt: "2026-01-15T09:15:00.000Z"
+  },
+  {
+    id: "cust-4",
+    name: "Emma Watson",
+    email: "emma.w@travelco.org",
+    phone: "+91 98765 43213",
+    address: "74, Anna Salai, T. Nagar, Chennai, TN 600017",
+    drivingLicense: "TN-022023006412",
+    totalRentals: 2,
+    spent: 2100,
+    createdAt: "2026-02-18T16:20:00.000Z"
+  },
+  {
+    id: "cust-5",
+    name: "David Chen",
+    email: "david.c@techventure.io",
+    phone: "+91 98765 43214",
+    address: "Tower B-14, Embassy Tech Village, Bellandur, Bangalore, KA 560103",
+    drivingLicense: "KA-032021009182",
+    totalRentals: 5,
+    spent: 3890,
+    createdAt: "2026-03-22T11:45:00.000Z"
+  },
+  {
+    id: "cust-6",
+    name: "Priya Sharma",
+    email: "priya.sharma@innovate.in",
+    phone: "+91 98765 43215",
+    address: "B-201, Orchid Residency, Hinjawadi Phase 1, Pune, MH 411057",
+    drivingLicense: "MH-012019001243",
+    totalRentals: 3,
+    spent: 1850,
+    createdAt: "2026-04-10T13:10:00.000Z"
+  },
+  {
+    id: "cust-7",
+    name: "Rohan Varma",
+    email: "rohan.v@fintech.co",
+    phone: "+91 98765 43216",
+    address: "55, Jubilee Hills, Road No. 36, Hyderabad, TS 500033",
+    drivingLicense: "DL-012022007834",
+    totalRentals: 1,
+    spent: 390,
+    createdAt: "2026-05-02T15:00:00.000Z"
+  },
+  {
+    id: "cust-8",
+    name: "Ananya Iyer",
+    email: "ananya.iyer@designcraft.com",
+    phone: "+91 98765 43217",
+    address: "12/4, Koramangala 4th Block, 80 Feet Road, Bangalore, KA 560034",
+    drivingLicense: "KA-052023005829",
+    totalRentals: 2,
+    spent: 1420,
+    createdAt: "2026-06-14T10:30:00.000Z"
+  },
+  {
+    id: "cust-9",
+    name: "Kabir Mehta",
+    email: "kabir.mehta@venturelabs.org",
+    phone: "+91 98765 43218",
+    address: "401, Grand Arch, Golf Course Ext Road, Gurgaon, HR 122102",
+    drivingLicense: "HR-262020004128",
+    totalRentals: 0,
+    spent: 0,
+    createdAt: "2026-07-20T17:00:00.000Z"
+  },
+  {
+    id: "cust-10",
+    name: "Meera Nair",
+    email: "meera.nair@coastaltech.in",
+    phone: "+91 98765 43219",
+    address: "House 28, Panampilly Nagar, Main Avenue, Kochi, KL 682036",
+    drivingLicense: "KL-072021003491",
+    totalRentals: 1,
+    spent: 750,
+    createdAt: "2026-08-05T09:40:00.000Z"
+  }
 ];
 
 export const DUMMY_REVENUE = {

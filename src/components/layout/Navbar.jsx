@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Menu, Bell, LogOut, Car, ChevronDown } from 'lucide-react';
+import { Menu, Bell, LogOut, Car, KeyRound, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-export const Navbar = ({ onOpenSidebar, onOpenAddCar }) => {
+export const Navbar = ({ onOpenSidebar, onOpenAddCar, onOpenBookRental }) => {
   const { user, logout } = useAuth();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -32,12 +32,22 @@ export const Navbar = ({ onOpenSidebar, onOpenAddCar }) => {
       </div>
 
       {/* Right side: Actions, Notifications & Profile */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        {/* Quick Add Button */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Quick Book Rental Button */}
+        <button
+          type="button"
+          onClick={onOpenBookRental}
+          className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 text-white hover:bg-red-500 transition-colors shadow-xs"
+        >
+          <KeyRound className="w-3.5 h-3.5" />
+          <span>+ Book Rental</span>
+        </button>
+
+        {/* Quick Add Car Button */}
         <button
           type="button"
           onClick={onOpenAddCar}
-          className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors border border-red-200/60"
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors border border-red-200/60"
         >
           <Car className="w-3.5 h-3.5" />
           <span>+ Add Car</span>

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useMemo, useCallback } from 'react';
-import { carService } from '../services/api';
-import { DUMMY_REVENUE, INITIAL_CUSTOMERS } from '../services/seedData';
+import { carService, customerService, bookingService } from '../services/api';
+import { DUMMY_REVENUE } from '../services/seedData';
 import { toast } from 'react-toastify';
 
 export const CarContext = createContext(null);
@@ -8,7 +8,7 @@ export const CarContext = createContext(null);
 export const CarProvider = ({ children }) => {
   const [cars, setCars] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [customers] = useState(INITIAL_CUSTOMERS);
+  const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,21 +22,23 @@ export const CarProvider = ({ children }) => {
     sortBy: 'featured', // 'featured' | 'price-asc' | 'price-desc' | 'year-desc' | 'year-asc'
   });
 
-  // Fetch cars & bookings on mount
+  // Fetch cars, bookings, and customers on mount
   const loadInitialData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [fetchedCars, fetchedBookings] = await Promise.all([
+      const [fetchedCars, fetchedBookings, fetchedCustomers] = await Promise.all([
         carService.getCars(),
-        carService.getBookings(),
+        bookingService.getBookings(),
+        customerService.getCustomers(),
       ]);
       setCars(fetchedCars);
       setBookings(fetchedBookings);
+      setCustomers(fetchedCustomers);
     } catch (err) {
       console.error('Failed to load fleet data:', err);
-      setError(err.message || 'Failed to fetch car data.');
-      toast.error('Failed to fetch car data. Please try again.');
+      setError(err.message || 'Failed to fetch application data.');
+      toast.error('Failed to fetch application data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -116,10 +118,58 @@ export const CarProvider = ({ children }) => {
     [cars]
   );
 
-  // Add booking
+  // Customer CRUD operations
+  const addCustomer = async (customerData) => {
+    try {
+      const created = await customerService.createCustomer(customerData);
+      setCustomers((prev) => [created, ...prev]);
+      toast.success(`Customer ${created.name} registered successfully!`);
+      return created;
+    } catch (err) {
+      toast.error(err.message || 'Failed to add customer.');
+      throw err;
+    }
+  };
+
+  const updateCustomer = async (id, updatedData) => {
+    try {
+      const updated = await customerService.updateCustomer(id, updatedData);
+      setCustomers((prev) => prev.map((c) => (c.id === id ? updated : c)));
+      toast.success(`Customer ${updated.name} updated successfully!`);
+      return updated;
+    } catch (err) {
+      toast.error(err.message || 'Failed to update customer.');
+      throw err;
+    }
+  };
+
+  const deleteCustomer = async (id) => {
+    try {
+      const customerToDelete = customers.find((c) => c.id === id);
+      await customerService.deleteCustomer(id);
+      setCustomers((prev) => prev.filter((c) => c.id !== id));
+      toast.success(
+        customerToDelete
+          ? `Customer ${customerToDelete.name} removed.`
+          : 'Customer removed.'
+      );
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete customer.');
+      throw err;
+    }
+  };
+
+  const getCustomerById = useCallback(
+    (id) => {
+      return customers.find((c) => String(c.id) === String(id));
+    },
+    [customers]
+  );
+
+  // Booking operations
   const addBooking = async (bookingData) => {
     try {
-      const newBooking = await carService.createBooking(bookingData);
+      const newBooking = await bookingService.createBooking(bookingData);
       setBookings((prev) => [newBooking, ...prev]);
 
       // Update car status locally if booked
@@ -131,13 +181,95 @@ export const CarProvider = ({ children }) => {
         );
       }
 
-      toast.success(`Booking confirmed for ${newBooking.customerName}!`);
+      // Update customer stats locally
+      if (bookingData.customerId) {
+        setCustomers((prev) =>
+          prev.map((c) =>
+            c.id === bookingData.customerId
+              ? {
+                  ...c,
+                  totalRentals: (Number(c.totalRentals) || 0) + 1,
+                  spent: (Number(c.spent) || 0) + (Number(bookingData.totalAmount) || 0),
+                }
+              : c
+          )
+        );
+      }
+
+      toast.success(`Booking ${newBooking.id} confirmed for ${newBooking.customerName}!`);
       return newBooking;
     } catch (err) {
       toast.error(err.message || 'Booking failed.');
       throw err;
     }
   };
+
+  const updateBookingStatus = async (id, newStatus) => {
+    try {
+      const updated = await bookingService.updateBookingStatus(id, newStatus);
+      setBookings((prev) => prev.map((b) => (b.id === id ? updated : b)));
+
+      // If status changed to Completed or Cancelled, free up car in state
+      if (newStatus === 'Completed' || newStatus === 'Cancelled') {
+        if (updated.carId) {
+          setCars((prev) =>
+            prev.map((c) =>
+              c.id === updated.carId ? { ...c, availability: 'Available' } : c
+            )
+          );
+        }
+      } else if (newStatus === 'Active' || newStatus === 'Confirmed') {
+        if (updated.carId) {
+          setCars((prev) =>
+            prev.map((c) =>
+              c.id === updated.carId ? { ...c, availability: 'Booked' } : c
+            )
+          );
+        }
+      }
+
+      toast.success(`Booking ${id} marked as ${newStatus}!`);
+      return updated;
+    } catch (err) {
+      toast.error(err.message || 'Failed to update booking status.');
+      throw err;
+    }
+  };
+
+  const completeBooking = (id) => updateBookingStatus(id, 'Completed');
+  const cancelBooking = (id) => updateBookingStatus(id, 'Cancelled');
+
+  const deleteBooking = async (id) => {
+    try {
+      const bookingToDelete = bookings.find((b) => b.id === id);
+      await bookingService.deleteBooking(id);
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+
+      if (
+        bookingToDelete &&
+        (bookingToDelete.status === 'Active' || bookingToDelete.status === 'Confirmed') &&
+        bookingToDelete.carId
+      ) {
+        setCars((prev) =>
+          prev.map((c) =>
+            c.id === bookingToDelete.carId ? { ...c, availability: 'Available' } : c
+          )
+        );
+      }
+
+      toast.success(`Booking ${id} deleted.`);
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete booking.');
+      throw err;
+    }
+  };
+
+  const getBookingById = useCallback(
+    (id) => {
+      return bookings.find((b) => String(b.id) === String(id));
+    },
+    [bookings]
+  );
 
   // Reset to default fleet
   const resetFleetToDefault = () => {
@@ -220,11 +352,15 @@ export const CarProvider = ({ children }) => {
     const maintenanceCars = cars.filter(
       (c) => c.availability === 'Maintenance'
     ).length;
-    const activeRentals = bookings.filter((b) => b.status === 'Active').length;
-    const totalCustomers = customers.length + 19; // baseline plus seeds
+    const activeRentals = bookings.filter((b) => b.status === 'Active' || b.status === 'Confirmed').length;
+    const completedRentals = bookings.filter((b) => b.status === 'Completed').length;
+    const cancelledBookings = bookings.filter((b) => b.status === 'Cancelled').length;
+    const totalCustomers = customers.length;
     const totalRevenue =
       DUMMY_REVENUE.total +
-      bookings.reduce((sum, b) => sum + (Number(b.totalAmount) || 0), 0);
+      bookings
+        .filter((b) => b.status !== 'Cancelled')
+        .reduce((sum, b) => sum + (Number(b.totalAmount) || 0), 0);
 
     return {
       totalCars,
@@ -232,6 +368,8 @@ export const CarProvider = ({ children }) => {
       bookedCars,
       maintenanceCars,
       activeRentals,
+      completedRentals,
+      cancelledBookings,
       totalCustomers,
       totalRevenue,
       revenueData: DUMMY_REVENUE,
@@ -256,7 +394,17 @@ export const CarProvider = ({ children }) => {
         updateCar,
         deleteCar,
         getCarById,
+        addCustomer,
+        updateCustomer,
+        deleteCustomer,
+        getCustomerById,
         addBooking,
+        updateBookingStatus,
+        completeBooking,
+        cancelBooking,
+        deleteBooking,
+        getBookingById,
+        refreshData: loadInitialData,
         refreshCars: loadInitialData,
         resetFleetToDefault,
       }}

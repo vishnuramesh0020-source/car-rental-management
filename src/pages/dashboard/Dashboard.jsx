@@ -103,50 +103,62 @@ export const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-          <StatCard
-            title="Total Cars"
-            value={stats.totalCars}
-            icon={Car}
-            colorScheme="crimson"
-            subtitle="In system fleet"
-          />
-          <StatCard
-            title="Available Cars"
-            value={stats.availableCars}
-            icon={CheckCircle2}
-            colorScheme="emerald"
-            subtitle="Ready for rental"
-          />
-          <StatCard
-            title="Booked Cars"
-            value={stats.bookedCars}
-            icon={Clock}
-            colorScheme="amber"
-            subtitle="Currently reserved"
-          />
-          <StatCard
-            title="Active Rentals"
-            value={stats.activeRentals}
-            icon={KeyRound}
-            colorScheme="rose"
-            subtitle="On the road"
-          />
-          <StatCard
-            title="Customers"
-            value={stats.totalCustomers}
-            icon={Users}
-            colorScheme="amber"
-            subtitle="Registered renters"
-          />
-          <StatCard
-            title="Total Revenue"
-            value={`₹${stats.totalRevenue.toLocaleString()}`}
-            icon={IndianRupee}
-            colorScheme="crimson"
-            trend={stats.revenueData.growthPercent}
-            trendLabel="MoM growth"
-            subtitle="Year to date"
-          />
+          <Link to="/cars" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Total Cars"
+              value={stats.totalCars}
+              icon={Car}
+              colorScheme="crimson"
+              subtitle="In system fleet"
+            />
+          </Link>
+          <Link to="/cars" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Available Cars"
+              value={stats.availableCars}
+              icon={CheckCircle2}
+              colorScheme="emerald"
+              subtitle="Ready for rental"
+            />
+          </Link>
+          <Link to="/bookings" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Booked Cars"
+              value={stats.bookedCars}
+              icon={Clock}
+              colorScheme="amber"
+              subtitle="Currently reserved"
+            />
+          </Link>
+          <Link to="/bookings" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Active Rentals"
+              value={stats.activeRentals}
+              icon={KeyRound}
+              colorScheme="rose"
+              subtitle="On the road"
+            />
+          </Link>
+          <Link to="/customers" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Customers"
+              value={stats.totalCustomers}
+              icon={Users}
+              colorScheme="amber"
+              subtitle="Registered renters"
+            />
+          </Link>
+          <Link to="/bookings" className="block transition-transform hover:-translate-y-0.5">
+            <StatCard
+              title="Total Revenue"
+              value={`₹${stats.totalRevenue.toLocaleString()}`}
+              icon={IndianRupee}
+              colorScheme="crimson"
+              trend={stats.revenueData.growthPercent}
+              trendLabel="MoM growth"
+              subtitle="Year to date"
+            />
+          </Link>
         </div>
       </div>
 
@@ -316,10 +328,10 @@ export const Dashboard = () => {
           </div>
 
           <Link
-            to="/cars"
+            to="/bookings"
             className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
           >
-            <span>View all inventory</span>
+            <span>View all bookings</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>

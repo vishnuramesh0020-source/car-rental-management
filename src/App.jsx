@@ -13,6 +13,8 @@ import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { CarList } from './pages/cars/CarList';
 import { CarDetail } from './pages/cars/CarDetail';
+import { CustomerList } from './pages/customers/CustomerList';
+import { BookingHistory } from './pages/bookings/BookingHistory';
 import { NotFound } from './pages/NotFound';
 
 export default function App() {
@@ -74,6 +76,8 @@ export default function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="cars" element={<CarList />} />
               <Route path="cars/:id" element={<CarDetail />} />
+              <Route path="customers" element={<CustomerList />} />
+              <Route path="bookings" element={<BookingHistory />} />
             </Route>
 
             {/* 404 Catch-All */}
